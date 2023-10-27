@@ -45,6 +45,13 @@ const saveVideo = async (event) => {
     }
 };
 
+const deleteFromStorage = (videoID, storedVideoIDs) => {
+    const updatedVideoIDs = storedVideoIDs.filter(id => id !== videoID);
+    localStorage.setItem("youTubeVideoIDs", JSON.stringify(updatedVideoIDs));
+    console.log("Updated Video URLs:", updatedVideoIDs);
+    generateCards(updatedVideoIDs);
+}
+
 const displayVideos = () => {
     const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
     console.log("Stored Video IDs:", storedVideoIDs);
@@ -69,13 +76,7 @@ const generateCards = (storedVideoIDs) => {
                 const deleteButton = document.createElement("button");
                 deleteButton.textContent = "Delete";
                 deleteButton.className = "deleteButton";
-                deleteButton.addEventListener("click", () => {
-                    const updatedVideoIDs = storedVideoIDs.filter(id => id !== videoID);
-                    localStorage.setItem("youTubeVideoIDs", JSON.stringify(updatedVideoIDs));
-                    console.log("Updated Video URLs:", updatedVideoIDs);
-                    generateCards(updatedVideoIDs);
-                });
-
+                deleteButton.addEventListener("click", () => deleteFromStorage(videoID, storedVideoIDs));
                 card.appendChild(deleteButton);
 
                 const playButton = document.createElement("button");
