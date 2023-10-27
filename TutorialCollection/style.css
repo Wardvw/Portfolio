@@ -1,0 +1,19 @@
+.thumbnail-container {
+    position: relative;
+    display: inline-block;
+}
+
+.deleteButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.thumbnail-container:hover .deleteButton {
+    display: block;
+}

@@ -45,12 +45,14 @@ const saveVideo = async (event) => {
     }
 };
 
-const deleteFromStorage = (videoID, storedVideoIDs) => {
+const deleteFromStorage = (event, videoID) => {
+    event.stopPropagation();
+    const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
     const updatedVideoIDs = storedVideoIDs.filter(id => id !== videoID);
     localStorage.setItem("youTubeVideoIDs", JSON.stringify(updatedVideoIDs));
     console.log("Updated Video URLs:", updatedVideoIDs);
-    generateCards(updatedVideoIDs);
-}
+    displayVideos();
+};
 
 const displayVideos = () => {
     const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
@@ -69,15 +71,12 @@ const generateCards = (storedVideoIDs) => {
                 card.className = "card";
 
                 card.innerHTML = `
-                    <a href="javascript:void(0);" onclick="openVideoInNewWindow('${videoID}')">
-                        <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}">
-                    </a>`;
-
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Delete";
-                deleteButton.className = "deleteButton";
-                deleteButton.addEventListener("click", () => deleteFromStorage(videoID, storedVideoIDs));
-                card.appendChild(deleteButton);
+                    <div class="thumbnail-container">
+                        <a href="javascript:void(0);" onclick="openVideoInNewWindow('${videoID}')">
+                            <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}">
+                            <button class="deleteButton" onclick="deleteFromStorage(event, '${videoID}')">X</button>
+                        </a>
+                    </div>`;
 
                 videosContainer.appendChild(card);
             }
