@@ -17,9 +17,9 @@ const getVideoURL = async (videoID) => {
     }
 };
 
-const openVideoInNewWindow = (videoURL) => {
-    window.open(`https://www.youtube.com/watch?v=${videoURL}`);
-};
+// const openVideoInNewWindow = (videoURL) => {
+//     window.open(`https://www.youtube.com/watch?v=${videoURL}`);
+// };
 
 const saveVideo = async (event) => {
     event.preventDefault();
@@ -71,8 +71,8 @@ const generateCards = (storedVideoIDs) => {
                 card.className = "card";
 
                 card.innerHTML = `
-                    <div class="thumbnail-container">
-                        <a href="javascript:void(0);" onclick="openVideoInNewWindow('${videoID}')">
+                    <div class="thumbnailContainer">
+                        <a href="javascript:void(0);" onclick="handlePopupClick('${videoID}')">
                             <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}">
                             <button class="deleteButton" onclick="deleteFromStorage(event, '${videoID}')">X</button>
                         </a>
@@ -83,5 +83,19 @@ const generateCards = (storedVideoIDs) => {
         });
     });
 };
+
+const handlePopupClick = (videoURL) => {
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("width", "480");
+    iframe.setAttribute("height", "480");
+    iframe.setAttribute("src", `https://www.youtube.com/embed/${videoURL}?autoplay=1`); //* special "embed" url!
+    iframe.setAttribute("frameborder", "0");
+    iframe.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
+    iframe.setAttribute("allowfullscreen", "true");
+
+    const card = document.querySelector(".card");
+    card.innerHTML = "";
+    card.appendChild(iframe);
+}
 
 displayVideos(); //display at startup

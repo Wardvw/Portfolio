@@ -1,6 +1,15 @@
-.thumbnail-container {
+.thumbnailContainer {
     position: relative;
     display: inline-block;
+}
+
+iframe {
+    background-color: black;
+}
+
+img.thumbnail{
+    height: 30rem;
+    width: 30rem;
 }
 
 .deleteButton {
@@ -14,6 +23,10 @@
     cursor: pointer;
 }
 
-.thumbnail-container:hover .deleteButton {
+.thumbnailContainer:hover .deleteButton {
     display: block;
+}
+
+.faded {
+    opacity: 0.1;
 }
