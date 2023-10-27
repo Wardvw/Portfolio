@@ -7,10 +7,10 @@ iframe {
     background-color: black;
 }
 
-img.thumbnail{
+/* img.thumbnail{
     height: 30rem;
     width: 30rem;
-}
+} */
 
 .deleteButton {
     position: absolute;

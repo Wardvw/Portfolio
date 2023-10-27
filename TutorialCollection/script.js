@@ -17,10 +17,6 @@ const getVideoURL = async (videoID) => {
     }
 };
 
-// const openVideoInNewWindow = (videoURL) => {
-//     window.open(`https://www.youtube.com/watch?v=${videoURL}`);
-// };
-
 const saveVideo = async (event) => {
     event.preventDefault();
     const videoIDInput = document.getElementById("videoID");
@@ -69,11 +65,10 @@ const generateCards = (storedVideoIDs) => {
             if (validVideoURL) {
                 const card = document.createElement("div");
                 card.className = "card";
-
                 card.innerHTML = `
                     <div class="thumbnailContainer">
                         <a href="javascript:void(0);" onclick="handlePopupClick('${videoID}')">
-                            <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}">
+                            <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}" data-videoID="${videoID}">
                             <button class="deleteButton" onclick="deleteFromStorage(event, '${videoID}')">X</button>
                         </a>
                     </div>`;
@@ -84,18 +79,20 @@ const generateCards = (storedVideoIDs) => {
     });
 };
 
-const handlePopupClick = (videoURL) => {
+const handlePopupClick = (videoID) => {
     const iframe = document.createElement("iframe");
-    iframe.setAttribute("width", "480");
+    iframe.setAttribute("width", "640");
     iframe.setAttribute("height", "480");
-    iframe.setAttribute("src", `https://www.youtube.com/embed/${videoURL}?autoplay=1`); //* special "embed" url!
+    iframe.setAttribute("src", `https://www.youtube.com/embed/${videoID}?autoplay=1`); //* special "embed" url!
     iframe.setAttribute("frameborder", "0");
     iframe.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
     iframe.setAttribute("allowfullscreen", "true");
 
-    const card = document.querySelector(".card");
+    const card = document.querySelector(`[data-videoID="${videoID}"]`).closest(".card");
     card.innerHTML = "";
     card.appendChild(iframe);
 }
+
+//TODO:Make the deletebuttons clickable when already playing the video
 
 displayVideos(); //display at startup
