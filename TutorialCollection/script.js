@@ -69,8 +69,8 @@ const generateCards = (storedVideoIDs) => {
                 card.className = "card";
 
                 card.innerHTML = `
-                    <a href="${validVideoURL}" target="_blank">
-                    <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}">
+                    <a href="javascript:void(0);" onclick="openVideoInNewWindow('${videoID}')">
+                        <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}">
                     </a>`;
 
                 const deleteButton = document.createElement("button");
@@ -78,12 +78,6 @@ const generateCards = (storedVideoIDs) => {
                 deleteButton.className = "deleteButton";
                 deleteButton.addEventListener("click", () => deleteFromStorage(videoID, storedVideoIDs));
                 card.appendChild(deleteButton);
-
-                const playButton = document.createElement("button");
-                playButton.className = "playButton";
-                playButton.textContent = "Play";
-                playButton.addEventListener("click", () => openVideoInNewWindow(videoID));
-                card.appendChild(playButton);
 
                 videosContainer.appendChild(card);
             }
