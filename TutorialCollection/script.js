@@ -1,53 +1,93 @@
-const saveVideo = (event) => {
+const isURLValid = (videoURL) => {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = videoURL;
+    });
+};
+
+const getVideoURL = async (videoID) => {
+    const videoURL = `https://i3.ytimg.com/vi/${videoID}/sddefault.jpg`;
+
+    if (await isURLValid(videoURL)) {
+        return videoURL;
+    } else {
+        return null;
+    }
+};
+
+const openVideoInNewWindow = (videoURL) => {
+    window.open(`https://www.youtube.com/watch?v=${videoURL}`);
+};
+
+const saveVideo = async (event) => {
     event.preventDefault();
     const videoIDInput = document.getElementById("videoID");
     const videoID = videoIDInput.value;
-    // console.log(videoId);
 
-    if (videoID) {
-        const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
-        if (!storedVideoIDs.includes(videoID)) {
-            storedVideoIDs.push(videoID);
-            localStorage.setItem("youTubeVideoIDs", JSON.stringify(storedVideoIDs));
-            console.log("Added ID: ", videoID);
-        }
-        else {
-            console.log("VideoID already exists")
+    if (videoID) { //when submitted
+        const validVideoURL = await getVideoURL(videoID); //check if URL is valid
+        if (validVideoURL) {
+            const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
+            if (!storedVideoIDs.includes(videoID)) { //check if URL is not a duplicate
+                storedVideoIDs.push(videoID);
+                localStorage.setItem("youTubeVideoIDs", JSON.stringify(storedVideoIDs)); //add to local storage
+                console.log("Added Video URL: " + validVideoURL);
+            } else {
+                console.log("Video ID already exists");
+            }
+        } else {
+            console.log("Invalid Video ID");
         }
         videoIDInput.value = "";
         displayVideos();
     }
-}
+};
 
 const displayVideos = () => {
     const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
     console.log("Stored Video IDs:", storedVideoIDs);
     generateCards(storedVideoIDs);
-}
+};
 
 const generateCards = (storedVideoIDs) => {
     const videosContainer = document.querySelector("#videosContainer");
-    videosContainer.innerHTML = '';
+    videosContainer.innerHTML = "";
 
-    storedVideoIDs.forEach(videoId => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `<p>${videoId}</p>`;
+    storedVideoIDs.forEach(videoID => {
+        getVideoURL(videoID).then((validVideoURL) => {
+            if (validVideoURL) {
+                const card = document.createElement("div");
+                card.className = "card";
 
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
-        deleteButton.className = "deleteButton";
+                card.innerHTML = `
+                    <a href="${validVideoURL}" target="_blank">
+                    <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}">
+                    </a>`;
 
-        deleteButton.addEventListener("click", () => {
-            const updatedVideoIDs = storedVideoIDs.filter(id => id !== videoId);//updated = stored - id of deletedbutton clicked
-            localStorage.setItem('youTubeVideoIDs', JSON.stringify(updatedVideoIDs));//push to local storage
-            console.log("Updated Video IDs:", updatedVideoIDs);
-            generateCards(updatedVideoIDs);
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.className = "deleteButton";
+                deleteButton.addEventListener("click", () => {
+                    const updatedVideoIDs = storedVideoIDs.filter(id => id !== videoID);
+                    localStorage.setItem("youTubeVideoIDs", JSON.stringify(updatedVideoIDs));
+                    console.log("Updated Video URLs:", updatedVideoIDs);
+                    generateCards(updatedVideoIDs);
+                });
+
+                card.appendChild(deleteButton);
+
+                const playButton = document.createElement("button");
+                playButton.className = "playButton";
+                playButton.textContent = "Play";
+                playButton.addEventListener("click", () => openVideoInNewWindow(videoID));
+                card.appendChild(playButton);
+
+                videosContainer.appendChild(card);
+            }
         });
-
-        card.appendChild(deleteButton);
-        videosContainer.appendChild(card);
     });
 };
 
-
+displayVideos(); //display at startup
