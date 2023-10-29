@@ -69,8 +69,8 @@ const generateCards = (storedVideoIDs) => {
                     <div class="thumbnailContainer">
                         <a href="javascript:void(0);" onclick="handlePopupClick('${videoID}')">
                             <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}" data-videoID="${videoID}">
-                            <button class="thumbnailDeleteButton" onclick="deleteFromStorage(event, '${videoID}')">X</button>
-                            <button class="loadTimeStampButton" onclick="deleteFromStorage(event, '${videoID}')">Y</button>
+                            <button class="thumbnailDeleteButton" onclick="deleteFromStorage(event, '${videoID}')" title="Delete from collection">X</button>
+                            <button class="loadTimeStampButton" onclick="loadTimeStamp(event, '${videoID}')" title="Load timestamp">Y</button>
                         </a>
                     </div>`;
 
@@ -82,16 +82,16 @@ const generateCards = (storedVideoIDs) => {
 
 const handlePopupClick = (videoID) => {
     const iframe = document.createElement("iframe");
-    iframe.setAttribute("src", `https://www.youtube.com/embed/${videoID}?autoplay=1`); //* special "embed" url!
+    iframe.setAttribute("src", `https://www.youtube.com/embed/${videoID}?autoplay=1`);
     iframe.setAttribute("frameborder", "0");
     iframe.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
     iframe.setAttribute("allowfullscreen", "true");
 
     const card = document.querySelector(`[data-videoID="${videoID}"]`).closest(".card");
     card.innerHTML = `
-        <button class="deleteButton" onclick="deleteFromStorage(event, '${videoID}')">X</button>
-        <button class="loadTimeStampButton" onclick="deleteFromStorage(event, '${videoID}')">Y</button>
-        <button class="saveTimeStampButton" onclick="deleteFromStorage(event, '${videoID}')">Z</button>`;
+        <button class="deleteButton" onclick="deleteFromStorage(event, '${videoID}')" title="Delete">X</button>
+        <button class="loadTimeStampButton" onclick="loadTimeStamp(event, '${videoID}')" title="Load timestamp">Y</button>
+        <button class="saveTimeStampButton" onclick="saveTimeStamp(event, '${videoID}')" title="Save timestamp">Z</button>`;
     card.appendChild(iframe);
 }
 

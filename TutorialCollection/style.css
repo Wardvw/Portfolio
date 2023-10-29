@@ -1,7 +1,10 @@
+.thumbnail, .thumbnailContainer, .card{
+    width: 516px;
+    height: 332px;
+}
+
 .card {
     position: relative;
-    width: 520px;
-    height: 332px;
     margin: 5px;
     background-color: black;
 }
@@ -12,11 +15,6 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-}
-
-.thumbnail, .thumbnailContainer{
-    width: 520px;
-    height: 332px;
 }
 
 .thumbnailDeleteButton, .deleteButton, .saveTimeStampButton,.loadTimeStampButton{
