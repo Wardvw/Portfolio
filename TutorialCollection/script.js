@@ -57,7 +57,7 @@ const displayVideos = () => {
 };
 
 const generateCards = (storedVideoIDs) => {
-    const videosContainer = document.querySelector("#videosContainer");
+    const videosContainer = document.querySelector(".videosContainer");
     videosContainer.innerHTML = "";
 
     storedVideoIDs.forEach(videoID => {
@@ -69,7 +69,8 @@ const generateCards = (storedVideoIDs) => {
                     <div class="thumbnailContainer">
                         <a href="javascript:void(0);" onclick="handlePopupClick('${videoID}')">
                             <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}" data-videoID="${videoID}">
-                            <button class="deleteButton" onclick="deleteFromStorage(event, '${videoID}')">X</button>
+                            <button class="thumbnailDeleteButton" onclick="deleteFromStorage(event, '${videoID}')">X</button>
+                            <button class="loadTimeStampButton" onclick="deleteFromStorage(event, '${videoID}')">Y</button>
                         </a>
                     </div>`;
 
@@ -87,7 +88,10 @@ const handlePopupClick = (videoID) => {
     iframe.setAttribute("allowfullscreen", "true");
 
     const card = document.querySelector(`[data-videoID="${videoID}"]`).closest(".card");
-    card.innerHTML = `<button class="deleteButtonWhenPlayingVideo" onclick="deleteFromStorage(event, '${videoID}')">X</button>`;
+    card.innerHTML = `
+        <button class="deleteButton" onclick="deleteFromStorage(event, '${videoID}')">X</button>
+        <button class="loadTimeStampButton" onclick="deleteFromStorage(event, '${videoID}')">Y</button>
+        <button class="saveTimeStampButton" onclick="deleteFromStorage(event, '${videoID}')">Z</button>`;
     card.appendChild(iframe);
 }
 

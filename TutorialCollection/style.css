@@ -1,28 +1,39 @@
 .card {
     position: relative;
-    width: 480px;
+    width: 520px;
     height: 332px;
-    margin: 5px
+    margin: 5px;
+    background-color: black;
+}
+
+.videosContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
 }
 
 .thumbnail, .thumbnailContainer{
-    width: 480px;
+    width: 520px;
     height: 332px;
 }
 
-.deleteButton {
+.thumbnailDeleteButton, .deleteButton, .saveTimeStampButton,.loadTimeStampButton{
     position: absolute;
     top: 5px;
     right: 5px;
     cursor: pointer;
+    text-align: center;
+    z-index: 1;
 }
 
-.deleteButtonWhenPlayingVideo {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    cursor: pointer;
-    z-index: 1;
+.loadTimeStampButton {
+    top: 31px;
+}
+
+.saveTimeStampButton {
+    top: 57px;
 }
 
 .thumbnailContainer {
@@ -35,11 +46,22 @@ iframe {
     position: relative;
     width: 480px;
     height: 332px;
+    border-right-color: white 20px;
 }
 
-.deleteButton:hover,
-.deleteButtonWhenPlayingVideo:hover {
+.thumbnailDeleteButton:hover,
+.deleteButton:hover {
     background-color: red;
+    display: block;
+}
+
+.saveTimeStampButton:hover {
+    background-color: green;
+    display: block;
+}
+
+.loadTimeStampButton:hover {
+    background-color: yellow;
     display: block;
 }
 
