@@ -81,18 +81,14 @@ const generateCards = (storedVideoIDs) => {
 
 const handlePopupClick = (videoID) => {
     const iframe = document.createElement("iframe");
-    iframe.setAttribute("width", "640");
-    iframe.setAttribute("height", "480");
     iframe.setAttribute("src", `https://www.youtube.com/embed/${videoID}?autoplay=1`); //* special "embed" url!
     iframe.setAttribute("frameborder", "0");
     iframe.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
     iframe.setAttribute("allowfullscreen", "true");
 
     const card = document.querySelector(`[data-videoID="${videoID}"]`).closest(".card");
-    card.innerHTML = "";
+    card.innerHTML = `<button class="deleteButtonWhenPlayingVideo" onclick="deleteFromStorage(event, '${videoID}')">X</button>`;
     card.appendChild(iframe);
 }
-
-//TODO:Make the deletebuttons clickable when already playing the video
 
 displayVideos(); //display at startup

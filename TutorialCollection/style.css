@@ -1,3 +1,30 @@
+.card {
+    position: relative;
+    width: 480px;
+    height: 332px;
+    margin: 5px
+}
+
+.thumbnail, .thumbnailContainer{
+    width: 480px;
+    height: 332px;
+}
+
+.deleteButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+.deleteButtonWhenPlayingVideo {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    z-index: 1;
+}
+
 .thumbnailContainer {
     position: relative;
     display: inline-block;
@@ -5,25 +32,14 @@
 
 iframe {
     background-color: black;
+    position: relative;
+    width: 480px;
+    height: 332px;
 }
 
-/* img.thumbnail{
-    height: 30rem;
-    width: 30rem;
-} */
-
-.deleteButton {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: gray;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.thumbnailContainer:hover .deleteButton {
+.deleteButton:hover,
+.deleteButtonWhenPlayingVideo:hover {
+    background-color: red;
     display: block;
 }
 
