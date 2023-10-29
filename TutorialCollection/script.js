@@ -1,16 +1,27 @@
-const isURLValid = (videoURL) => {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(true);
-        img.onerror = () => resolve(false);
-        img.src = videoURL;
-    });
-};
+const apiKey = "AIzaSyB756pmkVCTjOXDRM5o-gGWxbMntoN1LDw";
+
+const isVideoValid = async (videoID) => {
+    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&part=snippet&id=${videoID}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (data.items && data.items.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.log("fail", error);
+        return false;
+    }
+}
 
 const getVideoURL = async (videoID) => {
     const videoURL = `https://i3.ytimg.com/vi/${videoID}/sddefault.jpg`;
 
-    if (await isURLValid(videoURL)) {
+    if (await isVideoValid(videoID)) {
         return videoURL;
     } else {
         return null;
