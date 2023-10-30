@@ -5,51 +5,51 @@ const recentUpdates = {};
 // YouTube API Key
 const apiKey = config.APIKEY;
 
-// Check if a video is valid
-const isVideoValid = async (videoID) => {
-    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&part=snippet&id=${videoID}`;
-    try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        return data.items && data.items.length > 0;
-    } catch (error) {
-        console.log("Failed to check video validity", error);
-        return false;
-    }
-};
-
-// Get the thumbnail URL for a video
-const getVideoURL = async (videoID) => {
-    const videoURL = `https://i3.ytimg.com/vi/${videoID}/sddefault.jpg`;
-    if (await isVideoValid(videoID)) {
-        return videoURL;
-    } else {
-        return null;
-    }
-};
-
 // Save a video to local storage
 const saveVideo = async (event) => {
     event.preventDefault();
     const videoIDInput = document.getElementById("videoID");
     const videoID = videoIDInput.value;
 
-    if (videoID) {
-        const validVideoURL = await getVideoURL(videoID);
-        if (validVideoURL) {
+    if (videoID) { //if an ID has been put in the form
+        const validVideoURL = await getVideoURL(videoID); //turn the ID into a URL
+        if (validVideoURL) { //if videoURL has a valid video
             const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
-            if (!storedVideoIDs.includes(videoID)) {
-                storedVideoIDs.push(videoID);
-                localStorage.setItem("youTubeVideoIDs", JSON.stringify(storedVideoIDs));
+            if (!storedVideoIDs.includes(videoID)) { //if URL isn't already in local storage
+                storedVideoIDs.push(videoID); //push to array
+                localStorage.setItem("youTubeVideoIDs", JSON.stringify(storedVideoIDs));// push array to local storage
                 console.log("Added Video URL: " + validVideoURL);
             } else {
                 console.log("Video ID already exists");
             }
-            videoIDInput.value = "";
+            videoIDInput.value = ""; //empty form
             displayVideos();
         } else {
             console.log("Invalid Video ID");
         }
+    }
+};
+
+// Get the URL for a given ID
+const getVideoURL = async (videoID) => {
+    const videoURL = `https://i3.ytimg.com/vi/${videoID}/sddefault.jpg`;
+    if (await isVideoValid(videoID)) { //Validate the URL by checking if there are matches
+        return videoURL; //return videoURL if yes
+    } else {
+        return null; //return null if not
+    }
+};
+
+//Validate the URL with Youtube Data API V3
+const isVideoValid = async (videoID) => {
+    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&part=snippet&id=${videoID}`;
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        return data.items && data.items.length > 0; //return matches
+    } catch (error) {
+        console.log("Failed to check video validity", error);
+        return false;
     }
 };
 
@@ -100,15 +100,15 @@ const generateCards = (storedVideoIDs) => {
                 deleteButton.onclick = (event) => deleteFromStorage(event, videoID);
                 deleteButton.textContent = "X";
 
-                const loadButton = document.createElement("button");
-                loadButton.className = "loadTimeStampButton";
-                loadButton.title = "Load timestamp";
-                loadButton.onclick = (event) => loadTimeStamp(event, videoID);
-                loadButton.textContent = "Y";
+                const restartButton = document.createElement("button");
+                restartButton.className = "restartButton";
+                restartButton.title = "Restart video";
+                restartButton.onclick = (event) => restartVideo(event, videoID);
+                restartButton.textContent = "Y";
 
                 link.appendChild(thumbnail);
                 link.appendChild(deleteButton);
-                link.appendChild(loadButton);
+                link.appendChild(restartButton);
 
                 thumbnailContainer.appendChild(link);
                 card.appendChild(thumbnailContainer);
@@ -121,17 +121,30 @@ const generateCards = (storedVideoIDs) => {
 
 // Callback when the YouTube API is ready
 const onYouTubeIframeAPIReady = (videoID) => {
-    const targetDiv = document.querySelector(`.identify${videoID}`);
+    const targetDiv = document.querySelector(`.identify${videoID}`); //search thumbnail that was clicked and target it for iframe generation
     targetDiv.id = `targetDiv-${videoID}`;
 
-    // Create a YouTube player by deleting the thumbnail and generating an iframe in its place
-    player = new YT.Player(`targetDiv-${videoID}`, {
+    // Create a YouTube player by invoking the createPlayer function
+    const startTime = recentUpdates[videoID] || 0; // Get the saved start time
+    const roundedDownStartTime = parseInt(startTime); //You can't start a youtube video on a float; make it an integer
+    createPlayer(videoID, roundedDownStartTime);
+    console.log("starttime:" + roundedDownStartTime)
+};
+
+// Function to create a YouTube player
+const createPlayer = (videoID, roundedDownStartTime) => {
+    const player = new YT.Player(`targetDiv-${videoID}`, { //use targeted div from onYouTubeIframeAPIReady function
         height: '390',
         width: '640',
         videoId: videoID,
-        playerVars: {},
+        playerVars: {
+            start: roundedDownStartTime
+        },
         events: {
-            'onReady': onPlayerReady,
+            'onReady': (event) => {
+                event.target.playVideo();
+                onPlayerReady(event);
+            },
             'onStateChange': onPlayerStateChange
         }
     });
@@ -148,8 +161,8 @@ let currentVideoPlayer = null;
 // Callback when the player state changes; pause video
 const onPlayerStateChange = (event) => {
     if (event.data == YT.PlayerState.PLAYING) {
-        if (currentVideoPlayer && currentVideoPlayer !== event.target) {
-            currentVideoPlayer.pauseVideo();
+        if (currentVideoPlayer && currentVideoPlayer !== event.target) {// If another video was clicked
+            currentVideoPlayer.pauseVideo();// Pause this video
         }
         currentVideoPlayer = event.target;
 
@@ -162,13 +175,13 @@ const onPlayerStateChange = (event) => {
             // Display the most recent time for each video
             for (const id in recentUpdates) {
                 if (recentUpdates.hasOwnProperty(id)) {
-                    console.log(`Video ID: ${id} `+`Most Recent Time: ${recentUpdates[id]}`);
+                    console.log(`Video ID: ${id} Most Recent Time: ${recentUpdates[id]}`);
                 }
             }
 
             // Log the live update timestamp
             const currentTime = currentVideoPlayer.getCurrentTime();
-            console.log(`Video ID: ${videoID} `+`Current Time: ${currentTime}`);
+            console.log(`Video ID: ${videoID} Current Time: ${currentTime}`);
 
             // Store the most recent update for the video in the object
             recentUpdates[videoID] = currentTime;
@@ -190,9 +203,7 @@ const onPlayerStateChange = (event) => {
 for (const videoID in storedRecentUpdates) {
     if (storedRecentUpdates.hasOwnProperty(videoID)) {
         recentUpdates[videoID] = storedRecentUpdates[videoID];
-        console.log(`Video ID: ${videoID} `+`Most Recent Time: ${recentUpdates[videoID]}`);
     }
 }
-
 
 displayVideos(); // Display at startup
