@@ -1,10 +1,10 @@
-let enableLogging = false; //Turn off all console logging with one line of code
+let enableLogging = true; // Turn off all console logging with one line of code
 const logMessages = [];
 
 const addLogMessage = (message) => {
     if (enableLogging) {
-        logMessages.push(message);
-        console.log(message);
+        logMessages.push(message); // All logs get pushed to an array instead of being logged
+        console.log(message); // Log all entries of the array
     }
 };
 
@@ -15,7 +15,7 @@ const recentUpdates = {};
 // YouTube API Key
 const apiKey = config.APIKEY;
 
-// Save a video to local storage
+// Save video to local storage
 const saveVideo = async (event) => {
     event.preventDefault();
     const videoIDInput = document.getElementById("videoID");
