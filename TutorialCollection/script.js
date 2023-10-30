@@ -1,3 +1,4 @@
+let done = false;
 const apiKey = config.APIKEY;
 
 const isVideoValid = async (videoID) => {
@@ -78,14 +79,38 @@ const generateCards = (storedVideoIDs) => {
             if (validVideoURL) {
                 const card = document.createElement("div");
                 card.className = "card";
-                card.innerHTML = `
-                    <div class="thumbnailContainer">
-                        <a href="javascript:void(0);" onclick="handlePopupClick('${videoID}')">
-                            <img class="thumbnail" src="${validVideoURL}" alt="Cover image for YouTube video with ID ${videoID}" data-videoID="${videoID}">
-                            <button class="thumbnailDeleteButton" onclick="deleteFromStorage(event, '${videoID}')" title="Delete from collection">X</button>
-                            <button class="loadTimeStampButton" onclick="loadTimeStamp(event, '${videoID}')" title="Load timestamp">Y</button>
-                        </a>
-                    </div>`;
+
+                const thumbnailContainer = document.createElement("div");
+                thumbnailContainer.className = "thumbnailContainer";
+
+                const link = document.createElement("a");
+                link.href = "javascript:void(0);";
+                link.onclick = () => onYouTubeIframeAPIReady(videoID);
+
+                const thumbnail = document.createElement("img");
+                thumbnail.className = `identify${videoID} thumbnail`;
+                thumbnail.src = validVideoURL;
+                thumbnail.alt = `Cover image for YouTube video with ID ${videoID}`;
+                thumbnail.dataset.videoID = videoID;
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "thumbnailDeleteButton";
+                deleteButton.title = "Delete from collection";
+                deleteButton.onclick = (event) => deleteFromStorage(event, videoID);
+                deleteButton.textContent = "X";
+
+                const loadButton = document.createElement("button");
+                loadButton.className = "loadTimeStampButton";
+                loadButton.title = "Load timestamp";
+                loadButton.onclick = (event) => loadTimeStamp(event, videoID);
+                loadButton.textContent = "Y";
+
+                link.appendChild(thumbnail);
+                link.appendChild(deleteButton);
+                link.appendChild(loadButton);
+
+                thumbnailContainer.appendChild(link);
+                card.appendChild(thumbnailContainer);
 
                 videosContainer.appendChild(card);
             }
@@ -93,19 +118,32 @@ const generateCards = (storedVideoIDs) => {
     });
 };
 
-const handlePopupClick = (videoID) => {
-    const iframe = document.createElement("iframe");
-    iframe.setAttribute("src", `https://www.youtube.com/embed/${videoID}?autoplay=1`);
-    iframe.setAttribute("frameborder", "0");
-    iframe.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture");
-    iframe.setAttribute("allowfullscreen", "true");
+const onYouTubeIframeAPIReady = (videoID) => {
+    const targetDiv = document.querySelector(`.identify${videoID}`);
+    targetDiv.id = `targetDiv`
 
-    const card = document.querySelector(`[data-videoID="${videoID}"]`).closest(".card");
-    card.innerHTML = `
-        <button class="deleteButton" onclick="deleteFromStorage(event, '${videoID}')" title="Delete">X</button>
-        <button class="loadTimeStampButton" onclick="loadTimeStamp(event, '${videoID}')" title="Load timestamp">Y</button>
-        <button class="saveTimeStampButton" onclick="saveTimeStamp(event, '${videoID}')" title="Save timestamp">Z</button>`;
-    card.appendChild(iframe);
-}
+    player = new YT.Player(`targetDiv`, {
+        height: '390',
+        width: '640',
+        videoId: videoID,
+        playerVars: {
+            'playsinline': 1
+        },
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+        }
+    });
+};
+
+const onPlayerReady = (event) => {
+    event.target.playVideo();
+};
+
+const onPlayerStateChange = (event) => {
+    if (event.data == YT.PlayerState.PLAYING && !done) {
+        done = true;
+    }
+};
 
 displayVideos(); //display at startup
