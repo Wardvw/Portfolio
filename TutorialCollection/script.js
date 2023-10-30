@@ -1,4 +1,4 @@
-let done = false;
+// let done = false;
 const apiKey = config.APIKEY;
 
 const isVideoValid = async (videoID) => {
@@ -120,15 +120,16 @@ const generateCards = (storedVideoIDs) => {
 
 const onYouTubeIframeAPIReady = (videoID) => {
     const targetDiv = document.querySelector(`.identify${videoID}`);
-    targetDiv.id = `targetDiv`
+    targetDiv.id = `targetDiv-${videoID}`;
 
-    player = new YT.Player(`targetDiv`, {
+    player = new YT.Player(`targetDiv-${videoID}`, {
         height: '390',
         width: '640',
         videoId: videoID,
-        playerVars: {
-            'playsinline': 1
-        },
+        playerVars: { 
+            rel: 0, 
+            showinfo: 0, 
+            ecver: 2 },
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
@@ -140,9 +141,14 @@ const onPlayerReady = (event) => {
     event.target.playVideo();
 };
 
+let currentVideoPlayer = null;
+
 const onPlayerStateChange = (event) => {
-    if (event.data == YT.PlayerState.PLAYING && !done) {
-        done = true;
+    if (event.data == YT.PlayerState.PLAYING) {
+        if (currentVideoPlayer && currentVideoPlayer !== event.target) {
+            currentVideoPlayer.pauseVideo();
+        }
+        currentVideoPlayer = event.target;
     }
 };
 
