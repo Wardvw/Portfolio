@@ -1,4 +1,4 @@
-const apiKey = "AIzaSyB756pmkVCTjOXDRM5o-gGWxbMntoN1LDw";
+const apiKey = config.APIKEY;
 
 const isVideoValid = async (videoID) => {
     const apiUrl = `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&part=snippet&id=${videoID}`;
@@ -44,13 +44,15 @@ const saveVideo = async (event) => {
             } else {
                 console.log("Video ID already exists");
             }
+            videoIDInput.value = "";
+            displayVideos();
+            // location.reload(); // Reload the page
         } else {
             console.log("Invalid Video ID");
         }
-        videoIDInput.value = "";
-        displayVideos();
     }
 };
+
 
 const deleteFromStorage = (event, videoID) => {
     event.stopPropagation();
