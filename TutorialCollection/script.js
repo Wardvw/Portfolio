@@ -1,3 +1,13 @@
+let enableLogging = false; //Turn off all console logging with one line of code
+const logMessages = [];
+
+const addLogMessage = (message) => {
+    if (enableLogging) {
+        logMessages.push(message);
+        console.log(message);
+    }
+};
+
 // Retrieve recent updates from local storage on page load
 const storedRecentUpdates = JSON.parse(localStorage.getItem("recentUpdates")) || {};
 const recentUpdates = {};
@@ -18,14 +28,14 @@ const saveVideo = async (event) => {
             if (!storedVideoIDs.includes(videoID)) { //if URL isn't already in local storage
                 storedVideoIDs.push(videoID); //push to array
                 localStorage.setItem("youTubeVideoIDs", JSON.stringify(storedVideoIDs));// push array to local storage
-                console.log("Added Video URL: " + validVideoURL);
+                addLogMessage("Added Video URL: " + validVideoURL);
             } else {
-                console.log("Video ID already exists");
+                addLogMessage("Video ID already exists");
             }
             videoIDInput.value = ""; //empty form
             displayVideos();
         } else {
-            console.log("Invalid Video ID");
+            addLogMessage("Invalid Video ID");
         }
     }
 };
@@ -48,7 +58,7 @@ const isVideoValid = async (videoID) => {
         const data = await response.json();
         return data.items && data.items.length > 0; //return matches
     } catch (error) {
-        console.log("Failed to check video validity", error);
+        addLogMessage("Failed to check video validity", error);
         return false;
     }
 };
@@ -59,14 +69,14 @@ const deleteFromStorage = (event, videoID) => {
     const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
     const updatedVideoIDs = storedVideoIDs.filter(id => id !== videoID);
     localStorage.setItem("youTubeVideoIDs", JSON.stringify(updatedVideoIDs));
-    console.log("Updated Video URLs:", updatedVideoIDs);
+    addLogMessage("Updated Video URLs:", updatedVideoIDs);
     displayVideos();
 };
 
 // Display videosIDs array in the console with every addition or deletion
 const displayVideos = () => {
     const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
-    console.log("Stored Video IDs:", storedVideoIDs);
+    addLogMessage(`Stored Video IDs:" ${storedVideoIDs}`);
     generateCards(storedVideoIDs);
 };
 
@@ -128,7 +138,7 @@ const onYouTubeIframeAPIReady = (videoID) => {
     const startTime = recentUpdates[videoID] || 0; // Get the saved start time
     const roundedDownStartTime = parseInt(startTime); //You can't start a youtube video on a float; make it an integer
     createPlayer(videoID, roundedDownStartTime);
-    console.log("starttime:" + roundedDownStartTime)
+    addLogMessage("starttime:" + roundedDownStartTime)
 };
 
 // Function to create a YouTube player
@@ -170,18 +180,21 @@ const onPlayerStateChange = (event) => {
 
         // Log the live update timestamp every second when the video is playing
         const updateInterval = setInterval(() => {
-            console.clear(); // Clear the console before every single update
+            if (enableLogging) {
+                console.clear(); // When logging is enabled, clear the console before every single update
+            }
 
             // Display the most recent time for each video
             for (const id in recentUpdates) {
                 if (recentUpdates.hasOwnProperty(id)) {
-                    console.log(`Video ID: ${id} Most Recent Time: ${recentUpdates[id]}`);
+                    const recentUpdatesInteger = parseInt(recentUpdates[id]);
+                    addLogMessage(`Video ID: ${id} Most Recent Time: ${recentUpdatesInteger}`);
                 }
             }
 
             // Log the live update timestamp
-            const currentTime = currentVideoPlayer.getCurrentTime();
-            console.log(`Video ID: ${videoID} Current Time: ${currentTime}`);
+            const currentTime = parseInt(currentVideoPlayer.getCurrentTime());
+            addLogMessage(`Video ID: ${videoID} Current Time: ${currentTime}`);
 
             // Store the most recent update for the video in the object
             recentUpdates[videoID] = currentTime;
