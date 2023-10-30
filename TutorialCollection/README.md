@@ -1,7 +1,6 @@
 A simple app that lets you save youtube tutorials and categorize them for later use.
 
 Functionalities:
-
 * Search by id and display its thumbnail.
 * Automatically add the video to the video collection if the ID is valid, don't if it already exists in the collection or the ID doesn't correspond to a video.
 * Store valid IDs in local storage.
@@ -11,3 +10,14 @@ Functionalities:
 
 Developer tools:
 * Turn all console logs on or off at once.
+
+Technologies used:
+
+Frontend:
+* HTML
+* CSS
+* JS
+
+API:
+* YouTube Data API v3
+* Youtube IFrame Player API
