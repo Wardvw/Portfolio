@@ -95,7 +95,7 @@ const generateCards = (storedVideoIDs) => {
                 thumbnailContainer.className = "thumbnailContainer";
 
                 const link = document.createElement("a");
-                link.className = `link`;
+                link.className = `link-${videoID}`;
                 link.href = "javascript:void(0);";
                 link.onclick = () => onYouTubeIframeAPIReady(videoID);
 
@@ -114,8 +114,8 @@ const generateCards = (storedVideoIDs) => {
 
                 const restartButton = document.createElement("button");
                 restartButton.className = "restartButton";
-                restartButton.title = "Restart video";
-                restartButton.onclick = () => restartVideo(videoID);
+                restartButton.title = "Restart video";;
+                restartButton.onclick = () => restartVideo(videoID, validVideoURL);
                 restartButton.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></path></svg>`;
 
                 link.appendChild(thumbnail);
@@ -225,19 +225,23 @@ const restartVideo = (videoID, validVideoURL) => {
         iframeToRemove.parentNode.removeChild(iframeToRemove);
     }
 
-    // recentUpdates[videoID] = 0
+    // Create a new image element
+    const thumbnail = document.createElement("img");
+    thumbnail.className = "test";
+    thumbnail.src = validVideoURL; // Set the image source to the valid video URL
+    thumbnail.alt = `Cover image for YouTube video with ID ${videoID}`;
 
-    // const thumbnail = document.createElement("img");
-    // thumbnail.className = `identify${videoID} thumbnail`;
-    // thumbnail.src = validVideoURL;
-    // thumbnail.alt = `Cover image for YouTube video with ID ${videoID}`;
-    // thumbnail.dataset.videoID = videoID;
+    thumbnail.id = `targetDiv-${videoID}`;
+    thumbnail.className = "thumbnail"
+    thumbnail.src = validVideoURL;
+    thumbnail.alt = `Cover image for YouTube video with ID ${videoID}`;
+    thumbnail.dataset.videoID = videoID;
 
-    // link = document.querySelector(`.link`)
-    // link.appendChild(thumbnail);
 
-    // generateCards(storedVideoIDs);
-    
-}
+    // Append the thumbnail to the .link element
+    const link = document.querySelector(`.link-${videoID}`);
+    link.appendChild(thumbnail);
+};
+
 
 displayVideos(); // Display at startup
