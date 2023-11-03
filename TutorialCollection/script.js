@@ -76,7 +76,7 @@ const deleteFromStorage = (event, videoID) => {
 // Display videosIDs array in the console with every addition or deletion
 const displayVideos = () => {
     const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
-    addLogMessage(`Stored Video IDs: ${storedVideoIDs}`);
+    console.log(`Stored videoIDs: `, storedVideoIDs);
     generateCards(storedVideoIDs);
 };
 
@@ -95,11 +95,13 @@ const generateCards = (storedVideoIDs) => {
                 thumbnailContainer.className = "thumbnailContainer";
 
                 const link = document.createElement("a");
+                link.className = `link`;
                 link.href = "javascript:void(0);";
                 link.onclick = () => onYouTubeIframeAPIReady(videoID);
 
                 const thumbnail = document.createElement("img");
-                thumbnail.className = `identify${videoID} thumbnail`;
+                thumbnail.id = `targetDiv-${videoID}`;
+                thumbnail.className = "thumbnail"
                 thumbnail.src = validVideoURL;
                 thumbnail.alt = `Cover image for YouTube video with ID ${videoID}`;
                 thumbnail.dataset.videoID = videoID;
@@ -113,7 +115,7 @@ const generateCards = (storedVideoIDs) => {
                 const restartButton = document.createElement("button");
                 restartButton.className = "restartButton";
                 restartButton.title = "Restart video";
-                restartButton.onclick = (event) => restartVideo(event, videoID);
+                restartButton.onclick = () => restartVideo(videoID);
                 restartButton.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></path></svg>`;
 
                 link.appendChild(thumbnail);
@@ -131,8 +133,6 @@ const generateCards = (storedVideoIDs) => {
 
 // Callback when the YouTube API is ready
 const onYouTubeIframeAPIReady = (videoID) => {
-    const targetDiv = document.querySelector(`.identify${videoID}`); //search thumbnail that was clicked and target it for iframe generation
-    targetDiv.id = `targetDiv-${videoID}`;
 
     // Create a YouTube player by invoking the createPlayer function
     const startTime = recentUpdates[videoID] || 0; // Get the saved start time
@@ -193,7 +193,7 @@ const onPlayerStateChange = (event) => {
             }
 
             const currentTime = parseInt(currentVideoPlayer.getCurrentTime());
-            addLogMessage(`Video ID: ${videoID} Current Time: ${currentTime}`);
+            addLogMessage(`Video ID: ${videoID}, current time: ${currentTime}`);
 
             // Store the most recent update for the video in the object
             recentUpdates[videoID] = currentTime;
@@ -217,6 +217,27 @@ for (const videoID in storedRecentUpdates) {
     if (storedRecentUpdates.hasOwnProperty(videoID)) {
         recentUpdates[videoID] = storedRecentUpdates[videoID];
     }
+}
+
+const restartVideo = (videoID, validVideoURL) => {
+    const iframeToRemove = document.querySelector(`#targetDiv-${videoID}`);
+    if (iframeToRemove) {
+        iframeToRemove.parentNode.removeChild(iframeToRemove);
+    }
+
+    // recentUpdates[videoID] = 0
+
+    // const thumbnail = document.createElement("img");
+    // thumbnail.className = `identify${videoID} thumbnail`;
+    // thumbnail.src = validVideoURL;
+    // thumbnail.alt = `Cover image for YouTube video with ID ${videoID}`;
+    // thumbnail.dataset.videoID = videoID;
+
+    // link = document.querySelector(`.link`)
+    // link.appendChild(thumbnail);
+
+    // generateCards(storedVideoIDs);
+    
 }
 
 displayVideos(); // Display at startup

@@ -6,6 +6,12 @@ button {
     text-align: center;
 }
 
+form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .thumbnail, .thumbnailContainer, .card{
     width: 516px;
     height: 332px;
