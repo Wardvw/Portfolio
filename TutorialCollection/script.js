@@ -76,7 +76,7 @@ const deleteFromStorage = (event, videoID) => {
 // Display videosIDs array in the console with every addition or deletion
 const displayVideos = () => {
     const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
-    addLogMessage(`Stored Video IDs:" ${storedVideoIDs}`);
+    addLogMessage(`Stored Video IDs: ${storedVideoIDs}`);
     generateCards(storedVideoIDs);
 };
 
@@ -108,13 +108,13 @@ const generateCards = (storedVideoIDs) => {
                 deleteButton.className = "thumbnailDeleteButton";
                 deleteButton.title = "Delete from collection";
                 deleteButton.onclick = (event) => deleteFromStorage(event, videoID);
-                deleteButton.textContent = "X";
+                deleteButton.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke="#000" stroke-width="2" d="M3,3 L21,21 M3,21 L21,3"></path></svg>`;
 
                 const restartButton = document.createElement("button");
                 restartButton.className = "restartButton";
                 restartButton.title = "Restart video";
                 restartButton.onclick = (event) => restartVideo(event, videoID);
-                restartButton.textContent = "Y";
+                restartButton.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></path></svg>`;
 
                 link.appendChild(thumbnail);
                 link.appendChild(deleteButton);
@@ -138,7 +138,7 @@ const onYouTubeIframeAPIReady = (videoID) => {
     const startTime = recentUpdates[videoID] || 0; // Get the saved start time
     const roundedDownStartTime = parseInt(startTime); //You can't start a youtube video on a float; make it an integer
     createPlayer(videoID, roundedDownStartTime);
-    addLogMessage("starttime:" + roundedDownStartTime)
+    addLogMessage("start time: " + roundedDownStartTime)
 };
 
 // Function to create a YouTube player
@@ -168,31 +168,30 @@ const onPlayerReady = (event) => {
 // Current video player
 let currentVideoPlayer = null;
 
+// Define an object to store update intervals for each video
+const updateIntervals = {};
+
 // Callback when the player state changes; pause video
 const onPlayerStateChange = (event) => {
     if (event.data == YT.PlayerState.PLAYING) {
-        if (currentVideoPlayer && currentVideoPlayer !== event.target) {// If another video was clicked
-            currentVideoPlayer.pauseVideo();// Pause this video
+        if (currentVideoPlayer && currentVideoPlayer !== event.target) {
+            currentVideoPlayer.pauseVideo();
         }
         currentVideoPlayer = event.target;
 
         const videoID = currentVideoPlayer.getVideoData().video_id;
 
+        // Clear the previous update interval for this video, if it exists
+        if (updateIntervals[videoID]) {
+            clearInterval(updateIntervals[videoID]);
+        }
+
         // Log the live update timestamp every second when the video is playing
-        const updateInterval = setInterval(() => {
+        updateIntervals[videoID] = setInterval(() => {
             if (enableLogging) {
-                console.clear(); // When logging is enabled, clear the console before every single update
+                console.clear();
             }
 
-            // Display the most recent time for each video
-            for (const id in recentUpdates) {
-                if (recentUpdates.hasOwnProperty(id)) {
-                    const recentUpdatesInteger = parseInt(recentUpdates[id]);
-                    addLogMessage(`Video ID: ${id} Most Recent Time: ${recentUpdatesInteger}`);
-                }
-            }
-
-            // Log the live update timestamp
             const currentTime = parseInt(currentVideoPlayer.getCurrentTime());
             addLogMessage(`Video ID: ${videoID} Current Time: ${currentTime}`);
 
@@ -201,16 +200,17 @@ const onPlayerStateChange = (event) => {
 
             // Save the recent updates object to local storage
             localStorage.setItem("recentUpdates", JSON.stringify(recentUpdates));
-        }, 1000); // Update every 1000 milliseconds (1 second)
+        }, 1000);
 
         // Stop live updates when the video is paused
         currentVideoPlayer.addEventListener('onStateChange', (newState) => {
             if (newState.data == YT.PlayerState.PAUSED) {
-                clearInterval(updateInterval);
+                clearInterval(updateIntervals[videoID]);
             }
         });
     }
 };
+
 
 // Retrieve recent updates from local storage on page load
 for (const videoID in storedRecentUpdates) {

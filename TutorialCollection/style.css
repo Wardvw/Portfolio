@@ -1,3 +1,11 @@
+button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 .thumbnail, .thumbnailContainer, .card{
     width: 516px;
     height: 332px;
@@ -50,11 +58,6 @@ iframe {
 .thumbnailDeleteButton:hover,
 .deleteButton:hover {
     background-color: red;
-    display: block;
-}
-
-.saveTimeStampButton:hover {
-    background-color: green;
     display: block;
 }
 
