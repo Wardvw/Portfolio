@@ -1,3 +1,18 @@
+.header, p{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.svgVisible {
+    display: inline;
+}
+
+.svgInvisible {
+    display: none;
+}
+
 button {
     display: flex;
     flex-direction: row;
@@ -6,10 +21,40 @@ button {
     text-align: center;
 }
 
+form > * {
+    padding: 10px;
+    margin: 5px;
+}
+
+.saveButton {
+    padding: 10px;
+}
+
+.toggleLogButton {
+    padding: 0px
+}
+
+.interface {
+    display: flex;
+    flex-direction: row;
+}
+
+.messageBox {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    text-align: left;
+    width: 45vw;
+    border: 1px solid white;
+    height: 8px
+}
+
 form {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .thumbnail, .thumbnailContainer, .card{
@@ -64,14 +109,139 @@ iframe {
 .thumbnailDeleteButton:hover,
 .deleteButton:hover {
     background-color: red;
-    display: block;
 }
 
 .restartButton:hover {
     background-color: yellow;
-    display: block;
 }
 
 .faded {
     opacity: 0.1;
+}
+
+/* Dark theme for the app */
+
+/* Darken the background */
+body {
+    background-color: #181818;
+    color: #ffffff;
+}
+
+/* Darken the form background */
+form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: #202020;
+    padding: 10px;
+}
+
+/* Darken the card background */
+.card {
+    position: relative;
+    margin: 5px;
+    background-color: #202020;
+    border: 1px solid #222;
+}
+
+/* Adjust button styles */
+button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #202020;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 5px;
+}
+
+button:hover {
+    background-color: #444;
+}
+
+/* Apply YouTube's red color to delete buttons */
+.thumbnailDeleteButton, .deleteButton {
+    background-color: #ff3f3f;
+}
+
+.thumbnailDeleteButton:hover, .deleteButton:hover {
+    background-color: #d32f2f;
+}
+
+/* Apply YouTube's gray color to restart button */
+.restartButton {
+    background-color: #606060;
+}
+
+.restartButton:hover {
+    background-color: #474747;
+}
+
+/* Adjust container background colors */
+.videosContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    background-color: #181818;
+    padding: 10px;
+}
+
+/* Set iframe background to black */
+iframe {
+    background-color: #000;
+    position: relative;
+    width: 480px;
+    height: 332px;
+    border-right-color: white 20px;
+}
+
+/* Faded text color */
+.faded {
+    opacity: 0.5;
+}
+
+/* Darken the card borders */
+.card {
+    border: 1px solid #222;
+}
+
+/* Make links stand out with YouTube's blue color */
+a {
+    color: #065fd4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Darken the delete button SVG */
+.thumbnailDeleteButton svg, .deleteButton svg {
+    stroke: #fff;
+}
+
+/* Darken the restart button SVG */
+.restartButton svg {
+    stroke: #fff;
+}
+
+/* Customize other elements according to the dark theme */
+/* ... Add more styles as needed */
+
+/* Adjust input field colors */
+input {
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #222;
+}
+
+/* Darken the form background */
+form {
+    background-color: #202020;
 }

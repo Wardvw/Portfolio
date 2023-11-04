@@ -1,13 +1,48 @@
-let enableLogging = true; // Turn off all console logging with one line of code
-const logMessages = [];
+//480 768 1920 breakpointsq
+
+let enableLogging = true;
+let enableMessaging = true;
 let currentVideoPlayer = null;
 const updateIntervals = {};
 const updateRefreshRate = 1000
 
+//switch svg visibility on button click
+const toggleLogButton = document.querySelector('.toggleLogButton');
+const svgVisible = document.querySelector('.svgVisible');
+const svgInvisible = document.querySelector('.svgInvisible');
+const messageBox = document.querySelector(".messageBox")
+let isSvgVisible = true;
+
+toggleLogButton.addEventListener('click', () => {
+    if (isSvgVisible) {
+        svgVisible.style.display = 'none';
+        svgInvisible.style.display = 'inline';
+        enableMessaging = false // Turn off all console logging with one line of code
+        messageBox.innerHTML = ""
+        messageBox.style.border = "1px solid grey"
+        messageBox.style.backgroundColor = "rgb(51,51,51)";
+    } else {
+        svgVisible.style.display = 'inline';
+        svgInvisible.style.display = 'none';
+        enableMessaging = true;
+        messageBox.style.border = "1px solid white"
+        messageBox.style.backgroundColor = "rgb(32,32,32)"
+    }
+
+isSvgVisible = !isSvgVisible;
+});
+
+// All logs get pushed to an array instead of being logged
+const logMessages = [];
+
 const addLogMessage = (message) => {
     if (enableLogging) {
-        logMessages.push(message); // All logs get pushed to an array instead of being logged
+        logMessages.push(message); 
         console.log(message); // Log all entries of the array
+    }
+    if (enableMessaging){
+        const messageBox = document.querySelector(".messageBox")
+        messageBox.innerHTML = message
     }
 };
 
@@ -72,7 +107,6 @@ const deleteFromStorage = (event, videoID) => {
     const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
     const updatedVideoIDs = storedVideoIDs.filter(id => id !== videoID);
     localStorage.setItem("youTubeVideoIDs", JSON.stringify(updatedVideoIDs));
-    addLogMessage("Updated Video URLs:", updatedVideoIDs);
     displayVideos();
 };
 
@@ -248,7 +282,7 @@ const restartVideo = (videoID, validVideoURL) => {
     link.appendChild(deleteButton);
     link.appendChild(restartButton);
 
-    console.log("restart done")
+    addLogMessage("restart done")
     recentUpdates[videoID] = 0
 };
 
