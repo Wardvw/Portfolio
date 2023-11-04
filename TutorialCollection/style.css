@@ -43,7 +43,7 @@ form {
     text-align: center;
 }
 
-.inputRow *, .messageRow * {
+.inputRow > * {
     padding: 10px;
     margin: 5px;
 }
@@ -74,6 +74,11 @@ button {
 
 button:hover {
     background-color: #444;
+}
+
+.messageRow > *{
+    padding: 10px;
+    margin: 5px;
 }
 
 .messageBox {
@@ -194,4 +199,10 @@ iframe {
         width: 86vw;
         height: calc(86vw*0.645);
     }
+}
+
+@media screen and (min-width: 599px) and (max-width: 1920px) {
+}
+
+@media screen and (min-width: 1921px) {
 }
