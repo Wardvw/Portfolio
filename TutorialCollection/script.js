@@ -1,5 +1,8 @@
 let enableLogging = true; // Turn off all console logging with one line of code
 const logMessages = [];
+let currentVideoPlayer = null;
+const updateIntervals = {};
+const updateRefreshRate = 1000
 
 const addLogMessage = (message) => {
     if (enableLogging) {
@@ -165,12 +168,6 @@ const onPlayerReady = (event) => {
     event.target.playVideo();
 };
 
-// Current video player
-let currentVideoPlayer = null;
-
-// Define an object to store update intervals for each video
-const updateIntervals = {};
-
 // Callback when the player state changes; pause video
 const onPlayerStateChange = (event) => {
     if (event.data == YT.PlayerState.PLAYING) {
@@ -189,7 +186,7 @@ const onPlayerStateChange = (event) => {
         // Log the live update timestamp every second when the video is playing
         updateIntervals[videoID] = setInterval(() => {
             if (enableLogging) {
-                console.clear();
+                // console.clear();
             }
 
             const currentTime = parseInt(currentVideoPlayer.getCurrentTime());
@@ -200,7 +197,7 @@ const onPlayerStateChange = (event) => {
 
             // Save the recent updates object to local storage
             localStorage.setItem("recentUpdates", JSON.stringify(recentUpdates));
-        }, 1000);
+        }, updateRefreshRate);
 
         // Stop live updates when the video is paused
         currentVideoPlayer.addEventListener('onStateChange', (newState) => {
@@ -210,7 +207,6 @@ const onPlayerStateChange = (event) => {
         });
     }
 };
-
 
 // Retrieve recent updates from local storage on page load
 for (const videoID in storedRecentUpdates) {
@@ -225,23 +221,35 @@ const restartVideo = (videoID, validVideoURL) => {
         iframeToRemove.parentNode.removeChild(iframeToRemove);
     }
 
-    // Create a new image element
-    const thumbnail = document.createElement("img");
-    thumbnail.className = "test";
-    thumbnail.src = validVideoURL; // Set the image source to the valid video URL
-    thumbnail.alt = `Cover image for YouTube video with ID ${videoID}`;
+    // Replace the old image element with the new one
+    const link = document.querySelector(`.link-${videoID}`);
+    link.innerHTML = ""; // Clear the link contents
 
+    const thumbnail = document.createElement("img");
     thumbnail.id = `targetDiv-${videoID}`;
-    thumbnail.className = "thumbnail"
+    thumbnail.className = "thumbnail";
     thumbnail.src = validVideoURL;
     thumbnail.alt = `Cover image for YouTube video with ID ${videoID}`;
     thumbnail.dataset.videoID = videoID;
 
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "thumbnailDeleteButton";
+    deleteButton.title = "Delete from collection";
+    deleteButton.onclick = (event) => deleteFromStorage(event, videoID);
+    deleteButton.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke="#000" stroke-width="2" d="M3,3 L21,21 M3,21 L21,3"></path></svg>`;
 
-    // Append the thumbnail to the .link element
-    const link = document.querySelector(`.link-${videoID}`);
+    const restartButton = document.createElement("button");
+    restartButton.className = "restartButton";
+    restartButton.title = "Restart video";;
+    restartButton.onclick = () => restartVideo(videoID, validVideoURL);
+    restartButton.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></path></svg>`;
+    
     link.appendChild(thumbnail);
-};
+    link.appendChild(deleteButton);
+    link.appendChild(restartButton);
 
+    console.log("restart done")
+    recentUpdates[videoID] = 0
+};
 
 displayVideos(); // Display at startup
