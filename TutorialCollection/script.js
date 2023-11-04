@@ -1,5 +1,3 @@
-//480 768 1920 breakpoints
-
 let enableLogging = true;
 let enableMessaging = true;
 let currentVideoPlayer = null;
@@ -17,16 +15,17 @@ toggleLogButton.addEventListener('click', () => {
     if (isSvgVisible) {
         svgVisible.style.display = 'none';
         svgInvisible.style.display = 'inline';
-        enableMessaging = false // Turn off all console logging with one line of code
-        messageBox.innerHTML = ""
-        messageBox.style.border = "1px solid grey"
-        messageBox.style.backgroundColor = "rgb(51,51,51)";
+        enableMessaging = false; // Turn off all console logging with one line of code
+        messageBox.style.color = "transparent"; // Set text color to transparent
+        messageBox.style.border = "1px solid grey";
+        messageBox.style.backgroundColor = "rgb(51, 51, 51)";
     } else {
         svgVisible.style.display = 'inline';
         svgInvisible.style.display = 'none';
         enableMessaging = true;
-        messageBox.style.border = "1px solid white"
-        messageBox.style.backgroundColor = "rgb(32,32,32)"
+        messageBox.style.color = "white"; // Set text color back to white (or any other suitable color)
+        messageBox.style.border = "1px solid white";
+        messageBox.style.backgroundColor = "rgb(32, 32, 32)";
     }
 
 isSvgVisible = !isSvgVisible;
@@ -56,21 +55,31 @@ const apiKey = config.APIKEY;
 // Save video to local storage
 const saveVideo = async (event) => {
     event.preventDefault();
-    const videoIDInput = document.getElementById("videoID");
-    const videoID = videoIDInput.value;
 
-    if (videoID) { //if an ID has been put in the form
-        const validVideoURL = await getVideoURL(videoID); //turn the ID into a URL
-        if (validVideoURL) { //if videoURL has a valid video
+    const userInput = document.getElementById("videoID").value; // Get the value of the input element
+    let videoID;
+
+    if (userInput.length > 11) { // If it is an URL
+        const splitURL = userInput.split('=');
+        videoID = splitURL[1];
+    } else {
+        videoID = userInput; // If it is an ID
+    }
+
+    if (videoID) {
+        const validVideoURL = await getVideoURL(videoID);
+
+        if (validVideoURL) {
             const storedVideoIDs = JSON.parse(localStorage.getItem("youTubeVideoIDs")) || [];
-            if (!storedVideoIDs.includes(videoID)) { //if URL isn't already in local storage
-                storedVideoIDs.push(videoID); //push to array
-                localStorage.setItem("youTubeVideoIDs", JSON.stringify(storedVideoIDs));// push array to local storage
+            if (!storedVideoIDs.includes(videoID)) {
+                storedVideoIDs.push(videoID);
+                localStorage.setItem("youTubeVideoIDs", JSON.stringify(storedVideoIDs));
                 addLogMessage("Added video URL: " + videoID);
             } else {
                 addLogMessage("Video ID already exists");
             }
-            videoIDInput.value = ""; //empty form
+            // Clear the input field
+            document.getElementById("videoID").value = "";
             displayVideos();
         } else {
             addLogMessage("Invalid Video ID");
@@ -153,7 +162,7 @@ const generateCards = (storedVideoIDs) => {
                 restartButton.className = "restartButton";
                 restartButton.title = "Restart video";;
                 restartButton.onclick = () => restartVideo(videoID, validVideoURL);
-                restartButton.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></path></svg>`;
+                restartButton.innerHTML = `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1.1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"></path></svg>`;
 
                 link.appendChild(thumbnail);
                 link.appendChild(deleteButton);
