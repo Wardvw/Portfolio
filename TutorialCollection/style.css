@@ -1,3 +1,17 @@
+body {
+    background-color: #181818;
+    color: #ffffff;
+}
+
+a {
+    color: #065fd4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 .header, .headline, .description {
     display: flex;
     flex-direction: column;
@@ -5,12 +19,42 @@
     align-items: center;
 }
 
-.svgVisible {
-    display: inline;
+.interface {
+    display: flex;
+    flex-direction: row;
 }
 
-.svgInvisible {
-    display: none;
+form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #202020;
+    padding: 10px;
+}
+
+.inputRow, .messageRow  {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.inputRow > * {
+    padding: 10px;
+    margin: 5px;
+}
+
+label {
+    font-size: x-large;
+}
+
+input {
+    background-color: #333;
+    color: #ffffff;
+    border: 1px solid #222;
 }
 
 button {
@@ -31,27 +75,17 @@ button:hover {
     background-color: #444;
 }
 
-.inputRow, .messageRow  {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+.svgVisible {
+    display: inline;
 }
 
-.inputRow > * {
-    padding: 10px;
-    margin: 5px;
+.svgInvisible {
+    display: none;
 }
 
 .messageRow > *{
     padding: 10px;
     margin: 5px;
-}
-
-.interface {
-    display: flex;
-    flex-direction: row;
 }
 
 .messageBox {
@@ -69,54 +103,21 @@ button:hover {
     margin: 5px;
 }
 
-form {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    background-color: #202020;
-    padding: 10px;
-}
-
-label {
-    font-size: x-large;
-}
-
-.thumbnail, .thumbnailContainer, .card{
-    width: 516px;
-    height: 332px;
-}
-
-.card {
-    position: relative;
-    margin: 5px;
-    background-color: black;
-}
-
 .videosContainer {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    background-color: #181818;
+    padding: 10px;
 }
 
-.thumbnailDeleteButton, .deleteButton, .saveTimeStampButton,.restartButton{
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    cursor: pointer;
-    text-align: center;
-    z-index: 1;
-}
-
-.restartButton {
-    top: 31px;
-}
-
-.saveTimeStampButton {
-    top: 57px;
+.card {
+    position: relative;
+    margin: 5px;
+    background-color: #202020;
+    border: 1px solid #222;
 }
 
 .thumbnailContainer {
@@ -124,8 +125,13 @@ label {
     display: inline-block;
 }
 
+.thumbnail, .thumbnailContainer, .card{
+    width: 516px;
+    height: 332px;
+}
+
 iframe {
-    background-color: black;
+    background-color: #000;
     position: relative;
     width: 480px;
     height: 332px;
@@ -137,24 +143,13 @@ iframe {
     background-color: red;
 }
 
-.restartButton:hover {
-    background-color: yellow;
-}
-
-.faded {
-    opacity: 0.1;
-}
-
-body {
-    background-color: #181818;
-    color: #ffffff;
-}
-
-.card {
-    position: relative;
-    margin: 5px;
-    background-color: #202020;
-    border: 1px solid #222;
+.thumbnailDeleteButton, .deleteButton, .restartButton{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    text-align: center;
+    z-index: 1;
 }
 
 .thumbnailDeleteButton, .deleteButton {
@@ -165,65 +160,21 @@ body {
     background-color: #d32f2f;
 }
 
+.thumbnailDeleteButton svg, .deleteButton svg {
+    stroke: #fff;
+}
+
 .restartButton {
     background-color: #606060;
+    top: 31px;
 }
 
 .restartButton:hover {
     background-color: #474747;
 }
 
-.videosContainer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    background-color: #181818;
-    padding: 10px;
-}
-
-iframe {
-    background-color: #000;
-    position: relative;
-    width: 480px;
-    height: 332px;
-    border-right-color: white 20px;
-}
-
-.faded {
-    opacity: 0.5;
-}
-
-.card {
-    border: 1px solid #222;
-}
-
-a {
-    color: #065fd4;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-.thumbnailDeleteButton svg, .deleteButton svg {
-    stroke: #fff;
-}
-
 .restartButton svg {
     stroke: #fff;
-}
-
-input {
-    background-color: #333;
-    color: #ffffff;
-    border: 1px solid #222;
-}
-
-form {
-    background-color: #202020;
 }
 
 @media screen and (max-width: 480px) {
