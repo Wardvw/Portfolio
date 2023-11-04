@@ -1,4 +1,4 @@
-.header, p{
+.header, .headline, .description {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -19,19 +19,34 @@ button {
     justify-content: center;
     align-items: center;
     text-align: center;
+    background-color: #202020;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    padding: 5px;
 }
 
-form > * {
+button:hover {
+    background-color: #444;
+}
+
+.inputRow, .messageRow  {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.inputRow > * {
     padding: 10px;
     margin: 5px;
 }
 
-.saveButton {
+.messageRow > *{
     padding: 10px;
-}
-
-.toggleLogButton {
-    padding: 0px
+    margin: 5px;
 }
 
 .interface {
@@ -44,9 +59,14 @@ form > * {
     justify-content: left;
     align-items: center;
     text-align: left;
-    width: 45vw;
     border: 1px solid white;
-    height: 8px
+    width: 45vw;
+    height: 14px
+}
+
+.toggleLogButton {
+    padding: 5px;
+    margin: 5px;
 }
 
 form {
@@ -55,6 +75,12 @@ form {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    background-color: #202020;
+    padding: 10px;
+}
+
+label {
+    font-size: x-large;
 }
 
 .thumbnail, .thumbnailContainer, .card{
@@ -119,24 +145,11 @@ iframe {
     opacity: 0.1;
 }
 
-/* Dark theme for the app */
-
-/* Darken the background */
 body {
     background-color: #181818;
     color: #ffffff;
 }
 
-/* Darken the form background */
-form {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    background-color: #202020;
-    padding: 10px;
-}
-
-/* Darken the card background */
 .card {
     position: relative;
     margin: 5px;
@@ -144,26 +157,6 @@ form {
     border: 1px solid #222;
 }
 
-/* Adjust button styles */
-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: #202020;
-    color: #ffffff;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    padding: 5px;
-}
-
-button:hover {
-    background-color: #444;
-}
-
-/* Apply YouTube's red color to delete buttons */
 .thumbnailDeleteButton, .deleteButton {
     background-color: #ff3f3f;
 }
@@ -172,7 +165,6 @@ button:hover {
     background-color: #d32f2f;
 }
 
-/* Apply YouTube's gray color to restart button */
 .restartButton {
     background-color: #606060;
 }
@@ -181,7 +173,6 @@ button:hover {
     background-color: #474747;
 }
 
-/* Adjust container background colors */
 .videosContainer {
     display: flex;
     flex-direction: row;
@@ -192,7 +183,6 @@ button:hover {
     padding: 10px;
 }
 
-/* Set iframe background to black */
 iframe {
     background-color: #000;
     position: relative;
@@ -201,17 +191,14 @@ iframe {
     border-right-color: white 20px;
 }
 
-/* Faded text color */
 .faded {
     opacity: 0.5;
 }
 
-/* Darken the card borders */
 .card {
     border: 1px solid #222;
 }
 
-/* Make links stand out with YouTube's blue color */
 a {
     color: #065fd4;
     text-decoration: none;
@@ -221,27 +208,38 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Darken the delete button SVG */
 .thumbnailDeleteButton svg, .deleteButton svg {
     stroke: #fff;
 }
 
-/* Darken the restart button SVG */
 .restartButton svg {
     stroke: #fff;
 }
 
-/* Customize other elements according to the dark theme */
-/* ... Add more styles as needed */
-
-/* Adjust input field colors */
 input {
     background-color: #333;
     color: #ffffff;
     border: 1px solid #222;
 }
 
-/* Darken the form background */
 form {
     background-color: #202020;
+}
+
+@media screen and (max-width: 480px) {
+    .messageBox {
+        width: 268px;
+    }
+}
+
+@media screen and (min-width: 481px) and (max-width: 598px) {
+    .messageBox {
+        width: 268px;
+    }
+}
+
+@media screen and (min-width: 599px) and (max-width: 1920px) {
+}
+
+@media screen and (min-width: 1921px) {
 }

@@ -1,4 +1,4 @@
-//480 768 1920 breakpointsq
+//480 768 1920 breakpoints
 
 let enableLogging = true;
 let enableMessaging = true;
@@ -66,7 +66,7 @@ const saveVideo = async (event) => {
             if (!storedVideoIDs.includes(videoID)) { //if URL isn't already in local storage
                 storedVideoIDs.push(videoID); //push to array
                 localStorage.setItem("youTubeVideoIDs", JSON.stringify(storedVideoIDs));// push array to local storage
-                addLogMessage("Added Video URL: " + validVideoURL);
+                addLogMessage("Added video URL: " + videoID);
             } else {
                 addLogMessage("Video ID already exists");
             }
